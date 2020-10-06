@@ -1,4 +1,5 @@
 ﻿using PublicAddressBook.BusinessLayer.Interfaces;
+using PublicAddressBook.DomainLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
