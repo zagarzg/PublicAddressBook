@@ -5,11 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.8" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\PublicAddressBook.DomainLayer\PublicAddressBook.DomainLayer.csproj" />
+    <ProjectReference Include="..\PublicAddressBook.PersistanceLayer\PublicAddressBook.PersistanceLayer.csproj" />
   </ItemGroup>
 
 </Project>

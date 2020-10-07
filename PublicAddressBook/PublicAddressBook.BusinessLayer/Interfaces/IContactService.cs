@@ -1,17 +1,19 @@
 ﻿using PublicAddressBook.DomainLayer.Entities;
+using PublicAddressBook.PersistanceLayer.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PublicAddressBook.BusinessLayer.Interfaces
 {
     public interface IContactService
     {
-        Task<IEnumerable<Contact>> GetAll();
-        Task <Contact> Get(Guid id);
-        Task <Guid> Create(Contact contact);
-        Task Update(Guid id, Contact contact);
-        Task Delete(Guid id);
+        Task<IEnumerable<ContactDTO>> GetAll(CancellationToken cancellation = default);
+        Task<ContactDTO> Get(Guid id, CancellationToken cancellationToken = default);
+        Task <Guid> Create(ContactDTO contact, CancellationToken cancellationToken = default);
+        Task Update(ContactDTO contact, CancellationToken cancellationToken = default);
+        Task Delete(Guid id, CancellationToken cancellationToken = default);
     }
 }

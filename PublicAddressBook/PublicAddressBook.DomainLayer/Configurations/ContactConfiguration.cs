@@ -12,7 +12,8 @@ namespace PublicAddressBook.DomainLayer.Configurations
         public void Configure(EntityTypeBuilder<Contact> builder)
         {
             builder.OwnsOne(x => x.Address);
-            builder.Property(x => x.FullName).HasMaxLength(50);
+            builder.Property(x => x.FirstName).HasMaxLength(50);
+            builder.Property(x => x.LastName).HasMaxLength(50);
 
             builder.HasMany(t => t.PhoneNumbers)
                     .WithOne(p => p.Contact)

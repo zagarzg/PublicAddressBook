@@ -1,37 +1,65 @@
-﻿using PublicAddressBook.BusinessLayer.Interfaces;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
+using PublicAddressBook.BusinessLayer.Interfaces;
 using PublicAddressBook.DomainLayer.Entities;
+using PublicAddressBook.PersistanceLayer.DTOs;
+using PublicAddressBook.PersistanceLayer.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PublicAddressBook.BusinessLayer.Implementations
 {
     internal class ContactService : IContactService
     {
-        public async Task<Contact> Get(Guid id)
+        private readonly IRepository<Contact> _repository;
+        private readonly IMapper _mapper;
+
+        public ContactService(IRepository<Contact> repository, IMapper mapper)
         {
-            throw new NotImplementedException($"Getting {id}");
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        public Task<IEnumerable<Contact>> GetAll()
+        public async Task<ContactDTO> Get(Guid id, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException("Getting all");
+            var contact = await _repository.Get(
+                filter: dbContact => dbContact.Id == id,
+                include: src => src
+                    .Include(c => c.PhoneNumbers),
+                cancellationToken: cancellationToken);
+
+            return _mapper.Map<ContactDTO>(contact);
         }
 
-        public async Task Update(Guid id, Contact contact)
+        public async Task<IEnumerable<ContactDTO>> GetAll(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException($"Updating {id}");
+            var contacts = await _repository.GetAll(
+                include: source => source
+                    .Include(c => c.PhoneNumbers),
+                cancellationToken: cancellationToken);
+
+            return _mapper.Map<IEnumerable<ContactDTO>>(contacts);
         }
 
-        public async Task<Guid> Create(Contact contact)
+        public async Task Update(ContactDTO contact, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException("Creating");
+            var contactEntity = _mapper.Map<Contact>(contact);
+            await _repository.Update(contactEntity, cancellationToken);
         }
 
-        public async Task Delete(Guid id)
+        public async Task<Guid> Create(ContactDTO contact, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException($"Deleting {id}");
+            var contactEntity = _mapper.Map<Contact>(contact);
+            return await _repository.Insert(contactEntity, cancellationToken);
+        }
+
+        public async Task Delete(Guid id, CancellationToken cancellationToken)
+        {
+            await _repository.Delete(id, cancellationToken);
         }
     }
 }
