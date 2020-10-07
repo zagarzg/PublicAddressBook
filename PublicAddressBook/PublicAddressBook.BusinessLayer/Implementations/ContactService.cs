@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
+using PublicAddressBook.BusinessLayer.Exceptions;
 using PublicAddressBook.BusinessLayer.Interfaces;
 using PublicAddressBook.DomainLayer.Entities;
 using PublicAddressBook.PersistanceLayer.DTOs;
@@ -32,6 +33,9 @@ namespace PublicAddressBook.BusinessLayer.Implementations
                     .Include(c => c.PhoneNumbers),
                 cancellationToken: cancellationToken);
 
+            if (contact == null)
+                throw new NotFoundException(id);
+
             return _mapper.Map<ContactDTO>(contact);
         }
 
@@ -47,19 +51,41 @@ namespace PublicAddressBook.BusinessLayer.Implementations
 
         public async Task Update(ContactDTO contact, CancellationToken cancellationToken)
         {
-            var contactEntity = _mapper.Map<Contact>(contact);
-            await _repository.Update(contactEntity, cancellationToken);
+            try
+            {
+                var contactEntity = _mapper.Map<Contact>(contact);
+                await _repository.Update(contactEntity, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                throw new UpdateException(contact.Id, e);
+            }
+
         }
 
         public async Task<Guid> Create(ContactDTO contact, CancellationToken cancellationToken)
         {
-            var contactEntity = _mapper.Map<Contact>(contact);
-            return await _repository.Insert(contactEntity, cancellationToken);
+            try
+            {
+                var contactEntity = _mapper.Map<Contact>(contact);
+                return await _repository.Insert(contactEntity, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                throw new CreateException(e);
+            }
         }
 
         public async Task Delete(Guid id, CancellationToken cancellationToken)
         {
-            await _repository.Delete(id, cancellationToken);
+            try 
+            {
+                   await _repository.Delete(id, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                throw new DeleteException(id, e);
+            }
         }
     }
 }
