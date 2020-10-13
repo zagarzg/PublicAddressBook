@@ -17,7 +17,7 @@ namespace PublicAddressBook.PersistanceLayer
             // Add database
             services.AddDbContext<ApplicationDbContext>(o =>
             {
-                o.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+                o.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
                 o.EnableSensitiveDataLogging();
                 o.EnableDetailedErrors();
             });

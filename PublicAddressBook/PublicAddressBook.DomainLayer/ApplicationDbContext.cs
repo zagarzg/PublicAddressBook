@@ -63,7 +63,7 @@ namespace PublicAddressBook.DomainLayer
 
             // Here we create the DbContextOptionsBuilder manually.        
             var builder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            builder.UseNpgsql(connectionString);
+            builder.UseSqlServer(connectionString);
 
             // Create our DbContext.
             return new ApplicationDbContext(builder.Options);

@@ -17,7 +17,7 @@ namespace PublicAddressBook.DomainLayer.Configurations
 
             builder.HasMany(t => t.PhoneNumbers)
                     .WithOne(p => p.Contact)
-                    .OnDelete(DeleteBehavior.SetNull);
+                    .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
