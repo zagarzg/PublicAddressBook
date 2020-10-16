@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using PublicAddressBook.BusinessLayer.Exceptions;
 using PublicAddressBook.BusinessLayer.Interfaces;
+using PublicAddressBook.BusinessLayer.Validators;
 using PublicAddressBook.DomainLayer.Entities;
 using PublicAddressBook.PersistanceLayer.DTOs;
 using PublicAddressBook.PersistanceLayer.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,6 +21,7 @@ namespace PublicAddressBook.BusinessLayer.Implementations
     {
         private readonly IRepository<Contact> _repository;
         private readonly IMapper _mapper;
+        private readonly ContactValidator _validator = new ContactValidator();
 
         public ContactService(IRepository<Contact> repository, IMapper mapper)
         {
@@ -51,6 +55,8 @@ namespace PublicAddressBook.BusinessLayer.Implementations
 
         public async Task Update(ContactDTO contact, CancellationToken cancellationToken)
         {
+            ValidationResult result = _validator.Validate(contact);
+            
             try
             {
                 var contactEntity = _mapper.Map<Contact>(contact);
@@ -65,6 +71,19 @@ namespace PublicAddressBook.BusinessLayer.Implementations
 
         public async Task<Guid> Create(ContactDTO contact, CancellationToken cancellationToken)
         {
+            ValidationResult result =_validator.Validate(contact);
+            
+            if (!result.IsValid)
+            {
+                ValidationException exception = new ValidationException(nameof(contact));
+                foreach (ValidationFailure failure in result.Errors)
+                {
+                    exception._errors.Add(failure.PropertyName, failure.ErrorMessage);
+                }
+
+                throw exception;
+            }
+
             try
             {
                 var contactEntity = _mapper.Map<Contact>(contact);

@@ -22,8 +22,7 @@ namespace PublicAddressBook.DomainLayer
             var contact = new Contact()
             {
                 Id = Guid.Parse("0faee6ac-1772-4bbe-9990-a7d9a22dd559"),
-                FirstName = "Mario",
-                LastName = "Rozic",
+                FullName = "Mario Rozic",
                 DateOfBirth = new DateTime(1982, 6, 1),
             };
 
