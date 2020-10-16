@@ -50,7 +50,7 @@ namespace PublicAddressBook.Middleware
             {
                 errorDetails.Status = HttpStatusCode.BadRequest;
                 errorDetails.Message = validationEx.Message;
-                errorDetails.Errors = JsonConvert.SerializeObject(validationEx._errors, Formatting.Indented);
+                errorDetails.Errors = validationEx._errors;
             }
 
             else if (exception is NotFoundException)

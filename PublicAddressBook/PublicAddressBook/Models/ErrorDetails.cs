@@ -12,7 +12,7 @@ namespace PublicAddressBook.Models
     {
         public HttpStatusCode Status { get; set; }
         public string Message { get; set; }
-        public string Errors { get; set; }
+        public Dictionary<string, string> Errors { get; set; }
         public override string ToString()
         {
             var settings = new JsonSerializerSettings() { ContractResolver = new CamelCasePropertyNamesContractResolver() };

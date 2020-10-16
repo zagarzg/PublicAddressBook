@@ -7,8 +7,7 @@ namespace PublicAddressBook.DomainLayer.Entities
 {
     public class Contact : BaseEntity
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string FullName { get; set; }
         public Address Address { get; set; }
         public DateTime DateOfBirth { get; set; }
         public List<PhoneNumber> PhoneNumbers { get; set; } 

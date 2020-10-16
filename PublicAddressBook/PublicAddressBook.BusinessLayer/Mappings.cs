@@ -13,23 +13,8 @@ namespace PublicAddressBook.BusinessLayer
     {
         public Mappings()
         {
-
-            CreateMap<Contact, ContactDTO>()
-                .ForMember(dest =>
-                dest.FullName,
-                opt => opt.MapFrom(src => src.FirstName + " " + src.LastName))
-                .ReverseMap()
-                .ForMember(dest =>
-                dest.FirstName,
-                opt => opt.MapFrom(src => src.FullName.Split(new[] { ' ' }, 2).ToList()[0]))
-                .ForMember(dest =>
-                dest.LastName,
-                opt => opt.MapFrom(src => src.FullName.Split(new[] { ' ' }, 2).ToList()[1]));
-
+            CreateMap<Contact, ContactDTO>().ReverseMap();
             CreateMap<PhoneNumber, PhoneNumberDTO>().ReverseMap();
-
         }
-
-        
     }
 }
