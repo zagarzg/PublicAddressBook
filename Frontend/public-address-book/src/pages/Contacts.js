@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Paper, makeStyles, TableBody, TableRow, TableCell, TableContainer, TableHead, Table} from '@material-ui/core';
 import { connect } from 'react-redux';
 import * as actions from '../actions/AContact';
+import ContactForm from '../pages/ContactForm'
 import { RContact } from '../reducers/RContact';
 
 const useStyles = makeStyles(theme => ({
@@ -36,6 +37,7 @@ const Contacts = (props) => {
 
     return (
         <Paper className={classes.pageContent}>
+            <ContactForm />
             <TableContainer>
                 <Table className={classes.table}>
                     <TableHead>

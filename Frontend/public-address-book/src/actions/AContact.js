@@ -20,3 +20,16 @@ export const fetchAll = () => dispatch => {
     .catch(err => console.log(err))
 
 }
+
+export const create = (data, onSuccess) => dispatch => {
+    
+    api.rCandidates().create()
+        .then(res => {
+            dispatch({
+                type: ACTION_TYPES.CREATE,
+                payload: res.data
+            })
+            onSuccess()
+    })
+    .catch(err => console.log(err))
+}
