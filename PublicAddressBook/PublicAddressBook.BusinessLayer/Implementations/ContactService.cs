@@ -69,7 +69,7 @@ namespace PublicAddressBook.BusinessLayer.Implementations
 
         }
 
-        public async Task<Guid> Create(ContactDTO contact, CancellationToken cancellationToken)
+        public async Task<Contact> Create(ContactDTO contact, CancellationToken cancellationToken)
         {
             ValidationResult result =_validator.Validate(contact);
             
@@ -87,7 +87,8 @@ namespace PublicAddressBook.BusinessLayer.Implementations
             try
             {
                 var contactEntity = _mapper.Map<Contact>(contact);
-                return await _repository.Insert(contactEntity, cancellationToken);
+                await _repository.Insert(contactEntity, cancellationToken);
+                return contactEntity;
             }
             catch (Exception e)
             {
