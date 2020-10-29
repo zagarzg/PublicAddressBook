@@ -1,4 +1,5 @@
 ﻿using PublicAddressBook.DomainLayer.Entities;
+using PublicAddressBook.DomainLayer.Helpers;
 using PublicAddressBook.PersistanceLayer.DTOs;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ namespace PublicAddressBook.BusinessLayer.Interfaces
 {
     public interface IContactService
     {
-        Task<IEnumerable<ContactDTO>> GetAll(CancellationToken cancellation = default);
+        Task<PagedList<ContactDTO>> GetAll(ContactParameters contactParameters, CancellationToken cancellation = default);
         Task<ContactDTO> Get(Guid id, CancellationToken cancellationToken = default);
         Task <Contact> Create(ContactDTO contact, CancellationToken cancellationToken = default);
         Task <Contact> Update(ContactDTO contact, CancellationToken cancellationToken = default);

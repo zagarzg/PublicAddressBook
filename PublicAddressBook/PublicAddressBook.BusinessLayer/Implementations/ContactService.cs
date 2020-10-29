@@ -6,6 +6,7 @@ using PublicAddressBook.BusinessLayer.Exceptions;
 using PublicAddressBook.BusinessLayer.Interfaces;
 using PublicAddressBook.BusinessLayer.Validators;
 using PublicAddressBook.DomainLayer.Entities;
+using PublicAddressBook.DomainLayer.Helpers;
 using PublicAddressBook.PersistanceLayer.DTOs;
 using PublicAddressBook.PersistanceLayer.Interfaces;
 using System;
@@ -43,14 +44,16 @@ namespace PublicAddressBook.BusinessLayer.Implementations
             return _mapper.Map<ContactDTO>(contact);
         }
 
-        public async Task<IEnumerable<ContactDTO>> GetAll(CancellationToken cancellationToken = default)
+        public async Task<PagedList<ContactDTO>> GetAll(ContactParameters contactParameters, CancellationToken cancellationToken = default)
         {
             var contacts = await _repository.GetAll(
                 include: source => source
                     .Include(c => c.PhoneNumbers),
                 cancellationToken: cancellationToken);
 
-            return _mapper.Map<IEnumerable<ContactDTO>>(contacts);
+            var mappedContacts = _mapper.Map<IEnumerable<ContactDTO>>(contacts);
+
+            return PagedList<ContactDTO>.ToPagedList(mappedContacts, contactParameters.PageNumber, contactParameters.PageSize);
         }
 
         public async Task<Contact> Update(ContactDTO contact, CancellationToken cancellationToken)

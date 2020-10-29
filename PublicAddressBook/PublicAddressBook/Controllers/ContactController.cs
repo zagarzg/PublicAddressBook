@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PublicAddressBook.BusinessLayer.Interfaces;
 using PublicAddressBook.DomainLayer.Entities;
+using PublicAddressBook.DomainLayer.Helpers;
 using PublicAddressBook.PersistanceLayer.DTOs;
 using System;
 using System.Collections.Generic;
@@ -20,9 +21,9 @@ namespace PublicAddressBook.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(CancellationToken cancellationToken = default)
+        public async Task<IActionResult> GetAll([FromQuery] ContactParameters contactParameters, CancellationToken cancellationToken = default)
         {
-            return Ok(await _contactService.GetAll(cancellationToken));
+            return Ok(await _contactService.GetAll(contactParameters, cancellationToken));
         }
 
         [HttpGet("{id}")]
