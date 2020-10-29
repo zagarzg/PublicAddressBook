@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FormControl, FormLabel, Grid, TextField, ThemeProvider } from '@material-ui/core';
 import { useForm, Form } from '../components/useForm';
 import DatePicker from '../components/DatePicker';
@@ -7,11 +7,12 @@ import { connect } from 'react-redux';
 import * as actions from '../actions/AContact';
 import { v4 as uuidv4 } from 'uuid';
 
+import Contacts from './Contacts';
+
 
 const generateUUID = () => {
     return uuidv4();
 }
-
 
 const initialValues = {
     id: generateUUID(),
@@ -54,8 +55,6 @@ const ContactForm = (props) => {
             return Object.values(temp).every(x => x=="")
         }
 
-        
-
     }
 
     const validateSubmit = () => {
@@ -72,13 +71,13 @@ const ContactForm = (props) => {
         return Object.values(temp).every(x => x=="");
     }
 
-    const{values, setValues, errors, setErrors, handleInputChange} = useForm(initialValues, validate);
+    const{values, setValues, errors, setErrors, handleInputChange, resetForm} = useForm(initialValues, validate);
+    const { addOrUpdateContact, contactForEdit } = props;
 
     const handleSubmit = e => {
         e.preventDefault()
         if(validateSubmit()) {
-            window.alert('validation succeeded')
-            props.createContact(values, console.log(values.address));
+            addOrUpdateContact(values, resetForm)
         }
         
     }
@@ -100,11 +99,19 @@ const ContactForm = (props) => {
 
     const handleInputChangeDate = e => {
         const {name, value} = e.target
+        
         setValues({
             ...values,
-            [name]: value.toLocaleDateString()
+            [name]: value.toLocaleDateString("en-US")
         })
     }
+
+    useEffect(() => {
+        if (contactForEdit != null)
+        setValues({
+            ...contactForEdit
+        })
+    }, [contactForEdit])
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -156,7 +163,8 @@ const ContactForm = (props) => {
                         variant='contained'
                         color='default'
                         size='large'
-                        text="Reset" />
+                        text="Reset"
+                        onClick={resetForm} />
                     </div>
                 </Grid>
             </Grid>

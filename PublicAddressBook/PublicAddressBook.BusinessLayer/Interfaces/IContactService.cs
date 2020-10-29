@@ -13,7 +13,7 @@ namespace PublicAddressBook.BusinessLayer.Interfaces
         Task<IEnumerable<ContactDTO>> GetAll(CancellationToken cancellation = default);
         Task<ContactDTO> Get(Guid id, CancellationToken cancellationToken = default);
         Task <Contact> Create(ContactDTO contact, CancellationToken cancellationToken = default);
-        Task Update(ContactDTO contact, CancellationToken cancellationToken = default);
+        Task <Contact> Update(ContactDTO contact, CancellationToken cancellationToken = default);
         Task Delete(Guid id, CancellationToken cancellationToken = default);
     }
 }
