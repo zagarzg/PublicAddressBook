@@ -9,6 +9,8 @@ import  AddIcon from '@material-ui/icons/Add';
 import  EditIcon from '@material-ui/icons/Edit';
 import  DeleteIcon from '@material-ui/icons/Delete';
 import Popup from '../components/Popup'
+import Notification from '../components/Notification'
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const useStyles = makeStyles(theme => ({
     pageContent: {
@@ -37,6 +39,8 @@ const Contacts = (props) => {
     const classes = useStyles();
     const [openPopup, setOpenPopup] = useState(false)
     const [contactForEdit, setContactForEdit] = useState(null)
+    const [notify, setNotify] = useState({isOpen: false, message:'', type:''})
+    const [confirmDialog, setConfirmDialog] = useState({isOpen: false, title:'', subTitle:''})
 
     useEffect(() => {
         props.fetchAllContacts();
@@ -56,6 +60,11 @@ const Contacts = (props) => {
         resetForm();
         setContactForEdit(null)
         setOpenPopup(false);
+        setNotify({
+            isOpen: true,
+            message: 'Submitted successfully',
+            type: 'success'
+        })
     }
 
     const openInPopup = contact => {
@@ -64,7 +73,16 @@ const Contacts = (props) => {
     }
 
     const onDelete = id => {
+        setConfirmDialog({
+            ...confirmDialog,
+            isOpen: false
+        })
         props.deleteContact(id);
+        setNotify({
+            isOpen: true,
+            message: 'Deleted successfully',
+            type: 'error'
+        })
     }
 
         return (
@@ -103,7 +121,13 @@ const Contacts = (props) => {
                                                 <EditIcon color="primary" onClick={() => openInPopup(contact)}/>
                                             </IconButton>
                                             <IconButton>
-                                                <DeleteIcon color="secondary" onClick={() => onDelete(contact.id)}/>
+                                                <DeleteIcon color="secondary" onClick={() => 
+                                                    setConfirmDialog({
+                                                        isOpen: true,
+                                                        title: 'Are you sure to delete this contact',
+                                                        subTitle: "You can't undo this operation",
+                                                        onConfirm: () => onDelete(contact.id)
+                                                    })}/>
                                             </IconButton>
                                         </ButtonGroup>
                                     </TableCell>
@@ -120,6 +144,12 @@ const Contacts = (props) => {
                 contactForEdit = {contactForEdit}
                 addOrUpdateContact = {addOrUpdateContact}/>
             </Popup>
+            <Notification 
+            notify={notify}
+            setNotify={setNotify}/>
+            <ConfirmDialog 
+              confirmDialog={confirmDialog}
+              setConfirmDialog={setConfirmDialog}/>
             </>
         )
     
