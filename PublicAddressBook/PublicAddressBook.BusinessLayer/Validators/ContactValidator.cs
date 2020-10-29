@@ -49,7 +49,7 @@ namespace PublicAddressBook.BusinessLayer.Validators
 
         public bool IsOlderThan130(DateTime dateOfBirth)
         {
-            return DateTime.Now.Year - dateOfBirth.Year > 130;
+            return DateTime.Now.Year - dateOfBirth.Year < 130;
         }
 
         public bool IsBornedInFuture(DateTime dateOfBirth)
