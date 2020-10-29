@@ -40,10 +40,10 @@ namespace PublicAddressBook.Controllers
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] ContactDTO contact, CancellationToken cancellationToken = default)
         {
-            return Ok(await _contactService.Create(contact, cancellationToken));
+            return Ok(await _contactService.Update(contact, cancellationToken));
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken = default)
         {
             await _contactService.Delete(id, cancellationToken);

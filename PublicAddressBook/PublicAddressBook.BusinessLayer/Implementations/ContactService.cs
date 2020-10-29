@@ -53,14 +53,26 @@ namespace PublicAddressBook.BusinessLayer.Implementations
             return _mapper.Map<IEnumerable<ContactDTO>>(contacts);
         }
 
-        public async Task Update(ContactDTO contact, CancellationToken cancellationToken)
+        public async Task<Contact> Update(ContactDTO contact, CancellationToken cancellationToken)
         {
             ValidationResult result = _validator.Validate(contact);
-            
+
+            if (!result.IsValid)
+            {
+                ValidationException exception = new ValidationException(nameof(contact));
+                foreach (ValidationFailure failure in result.Errors)
+                {
+                    exception._errors.Add(failure.PropertyName, failure.ErrorMessage);
+                }
+
+                throw exception;
+            }
+
             try
             {
                 var contactEntity = _mapper.Map<Contact>(contact);
                 await _repository.Update(contactEntity, cancellationToken);
+                return contactEntity;
             }
             catch (Exception e)
             {

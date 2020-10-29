@@ -11,10 +11,10 @@ export const ACTION_TYPES = {
 export const fetchAll = () => dispatch => {
 
     api.rCandidates().fetchAll()
-        .then(response => {
+        .then(res => {
             dispatch({
                 type: ACTION_TYPES.FETCH_ALL,
-                payload: response.data
+                payload: res.data
             })
         }
     )
@@ -30,6 +30,33 @@ export const create = (data, onSuccess) => dispatch => {
             dispatch({
                 type: ACTION_TYPES.CREATE,
                 payload: res.data,
+            })
+            onSuccess()
+    })
+    .catch(err => console.log(err))
+}
+
+export const update = (data) => dispatch => {
+    
+
+    api.rCandidates().update(data)
+        .then(res => {
+            dispatch({
+                type: ACTION_TYPES.UPDATE,
+                payload: res.data
+            })
+    })
+    .catch(err => console.log(err))
+}
+
+export const Delete = (id, onSuccess) => dispatch => {
+    
+
+    api.rCandidates().delete(id)
+        .then(res => {
+            dispatch({
+                type: ACTION_TYPES.DELETE,
+                payload: id,
             })
             onSuccess()
     })

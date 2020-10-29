@@ -12,8 +12,10 @@ export default {
 
     rCandidates(url = baseUrl + 'Contact/') {
         return {
-            fetchAll: () => axios.get(url+'GetAll'),
-            create: newContact => axios.post(url+'Create', newContact , header )
+            fetchAll: () => axios.get(url + 'GetAll'),
+            create: newContact => axios.post(url + 'Create', newContact, header),
+            update: updateContact => axios.put(url + 'Update', updateContact, header),
+            delete: id => axios.delete(url + 'Delete/' + id)
         }
     }
 }

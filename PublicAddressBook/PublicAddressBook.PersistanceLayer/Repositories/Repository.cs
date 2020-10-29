@@ -104,6 +104,7 @@ namespace PublicAddressBook.PersistanceLayer.Repositories
             _context.Update(entity);
 
             await _context.SaveChangesAsync(cancellationToken);
+
         }
 
         public async Task Delete(Guid id, CancellationToken cancellationToken = default)
