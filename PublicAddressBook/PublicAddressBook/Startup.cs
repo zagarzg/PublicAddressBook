@@ -58,7 +58,8 @@ namespace PublicAddressBook
             app.UseCors(options =>
             options.WithOrigins("http://localhost:3000")
             .AllowAnyHeader()
-            .AllowAnyMethod());
+            .AllowAnyMethod()
+            .WithExposedHeaders("pagination"));
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

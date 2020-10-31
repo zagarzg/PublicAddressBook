@@ -2,7 +2,8 @@ import { ACTION_TYPES, getErrors } from '../actions/AContact';
 
 
 const initialState = {
-    list: []
+    list: [],
+    pagination: {}
 }
 
 export const RContact = (state=initialState, action) => {
@@ -11,8 +12,10 @@ export const RContact = (state=initialState, action) => {
         case ACTION_TYPES.FETCH_ALL:
             return {
                 ...state,
-                list: [...action.payload]
+                list: [...action.payload.contacts],
+                pagination: {...action.payload.pagination}
             }
+            
 
         case ACTION_TYPES.CREATE:
             return {
