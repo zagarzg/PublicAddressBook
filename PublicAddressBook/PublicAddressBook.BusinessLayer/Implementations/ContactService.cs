@@ -53,6 +53,8 @@ namespace PublicAddressBook.BusinessLayer.Implementations
 
             var mappedContacts = _mapper.Map<IEnumerable<ContactDTO>>(contacts);
 
+            
+
             return PagedList<ContactDTO>.ToPagedList(mappedContacts, contactParameters.PageNumber, contactParameters.PageSize);
         }
 

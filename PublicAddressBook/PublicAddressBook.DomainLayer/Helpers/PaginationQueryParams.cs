@@ -6,11 +6,11 @@ namespace PublicAddressBook.DomainLayer.Helpers
 {
     public abstract class PaginationQueryParams
     {
-        const int MAX_PAGE_SIZE = 20;
+        const int MAX_PAGE_SIZE = 25;
 
         public int PageNumber { get; set; } = 1;
 
-        private int _pageSize = 10;
+        private int _pageSize = 5;
 
         public int PageSize
         {

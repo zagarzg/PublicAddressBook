@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using PublicAddressBook.BusinessLayer.Interfaces;
 using PublicAddressBook.DomainLayer.Entities;
 using PublicAddressBook.DomainLayer.Helpers;
@@ -23,7 +24,21 @@ namespace PublicAddressBook.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] ContactParameters contactParameters, CancellationToken cancellationToken = default)
         {
-            return Ok(await _contactService.GetAll(contactParameters, cancellationToken));
+            var contacts = await _contactService.GetAll(contactParameters, cancellationToken);
+
+            var metadata = new
+            {
+                contacts.TotalCount,
+                contacts.PageSize,
+                contacts.CurrentPage,
+                contacts.TotalPages,
+                contacts.HasNext,
+                contacts.HasPrevios
+            };
+
+            Response.Headers.Add("pagination", JsonConvert.SerializeObject(metadata));
+
+            return Ok(contacts);
         }
 
         [HttpGet("{id}")]

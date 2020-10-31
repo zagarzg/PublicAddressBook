@@ -8,18 +8,20 @@ export const ACTION_TYPES = {
     FETCH_ALL: 'FETCH_ALL',
 }
 
-export const fetchAll = () => dispatch => {
+export const fetchAll = (pageNumber, pageSize) => dispatch => {
 
-    api.rCandidates().fetchAll()
+    api.rCandidates().fetchAll(pageNumber, pageSize)
         .then(res => {
             dispatch({
                 type: ACTION_TYPES.FETCH_ALL,
-                payload: res.data
+                payload: { contacts: res.data,
+                            pagination: JSON.parse(res.headers["pagination"])}
             })
         }
     )
     .catch(err => console.log(err))
 
+    
 }
 
 export const create = (data, onSuccess) => dispatch => {

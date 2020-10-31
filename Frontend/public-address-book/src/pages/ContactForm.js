@@ -14,7 +14,7 @@ const generateUUID = () => {
     return uuidv4();
 }
 
-const initialValues = {
+const initialValues = () =>({
     id: generateUUID(),
     fullName: '',
     address: {
@@ -24,7 +24,7 @@ const initialValues = {
     },
     dateOfBirth: new Date(),
     phoneNumbers: []
-}
+})
 
 const ContactForm = (props) => {
 
@@ -71,7 +71,7 @@ const ContactForm = (props) => {
         return Object.values(temp).every(x => x=="");
     }
 
-    const{values, setValues, errors, setErrors, handleInputChange, resetForm} = useForm(initialValues, validate);
+    const{values, setValues, errors, setErrors, handleInputChange, resetForm} = useForm(initialValues(), validate);
     const { addOrUpdateContact, contactForEdit } = props;
 
     const handleSubmit = e => {
