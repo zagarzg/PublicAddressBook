@@ -6,7 +6,7 @@ namespace PublicAddressBook.DomainLayer.Enums
 {
     public enum SortDirection
     {
-        Asc,
-        Desc
+        asc,
+        desc
     }
 }
