@@ -1,17 +1,20 @@
 ﻿using AutoMapper;
 using FluentValidation.Results;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using PublicAddressBook.BusinessLayer.Exceptions;
 using PublicAddressBook.BusinessLayer.Interfaces;
 using PublicAddressBook.BusinessLayer.Validators;
 using PublicAddressBook.DomainLayer.Entities;
+using PublicAddressBook.DomainLayer.Enums;
 using PublicAddressBook.DomainLayer.Helpers;
 using PublicAddressBook.PersistanceLayer.DTOs;
 using PublicAddressBook.PersistanceLayer.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,6 +52,8 @@ namespace PublicAddressBook.BusinessLayer.Implementations
             var contacts = await _repository.GetAll(
                 include: source => source
                     .Include(c => c.PhoneNumbers),
+                filter: GetFilter(contactParameters.SearchString),
+                orderBy: GetSort(contactParameters.OrderBy, contactParameters.SortDirection),
                 cancellationToken: cancellationToken);
 
             var mappedContacts = _mapper.Map<IEnumerable<ContactDTO>>(contacts);
@@ -123,6 +128,71 @@ namespace PublicAddressBook.BusinessLayer.Implementations
             {
                 throw new DeleteException(id, e);
             }
+        }
+
+        internal Expression<Func<Contact, bool>> GetFilter(string searchString)
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return null;
+
+            var query = searchString.Trim().ToLower();
+
+            var predicate = PredicateBuilder.New<Contact>();
+            predicate.Or(contact => contact.Address.City.ToLower().Contains(query));
+            predicate.Or(contact => contact.Address.Street.ToLower().Contains(query));
+            predicate.Or(contact => contact.FullName.ToLower().StartsWith(query));
+
+            return predicate;
+        }
+
+        internal Func<IQueryable<Contact>, IOrderedQueryable<Contact>> GetSort(string orderBy, SortDirection sortDirection)
+        {
+            if (string.IsNullOrWhiteSpace(orderBy))
+                return null;
+
+            return contacts =>
+            {
+                switch (orderBy)
+                {
+                    case nameof(Contact.FullName):
+                        if (sortDirection == SortDirection.asc)
+                        {
+                            contacts = contacts.OrderBy(x => x.FullName);
+                        }
+                        else
+                        {
+                            contacts = contacts.OrderByDescending(x => x.FullName);
+                        }
+                        break;
+
+                    case nameof(Contact.Address.City):
+                        if (sortDirection == SortDirection.asc)
+                        {
+                            contacts = contacts.OrderBy(x => x.Address.City);
+                        }
+                        else
+                        {
+                            contacts = contacts.OrderByDescending(x => x.Address.City);
+                        }
+                        break;
+
+                    case nameof(Contact.Address.Street):
+                        if (sortDirection == SortDirection.asc)
+                        {
+                            contacts = contacts.OrderBy(x => x.Address.Street);
+                        }
+                        else
+                        {
+                            contacts = contacts.OrderByDescending(x => x.Address.Street);
+                        }
+                        break;
+
+                    default:
+                        break;
+
+                }
+                return (IOrderedQueryable<Contact>)contacts;
+            };
         }
     }
 }

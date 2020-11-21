@@ -8,9 +8,9 @@ export const ACTION_TYPES = {
     FETCH_ALL: 'FETCH_ALL',
 }
 
-export const fetchAll = (pageNumber, pageSize) => dispatch => {
+export const fetchAll = (pageNumber, pageSize, order, orderBy, filter) => dispatch => {
 
-    api.rCandidates().fetchAll(pageNumber, pageSize)
+    api.rCandidates().fetchAll(pageNumber, pageSize, order, orderBy, filter)
         .then(res => {
             dispatch({
                 type: ACTION_TYPES.FETCH_ALL,

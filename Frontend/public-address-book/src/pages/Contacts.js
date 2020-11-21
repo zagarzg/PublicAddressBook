@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Paper, makeStyles, TableBody, TablePagination, TableRow, TableCell, TableContainer, TableHead, Table, ButtonGroup, IconButton} from '@material-ui/core';
+import { Paper, makeStyles, TableBody, TablePagination, TableRow, TableCell, TableContainer, TableHead, Table, ButtonGroup, IconButton, TableSortLabel, TextField} from '@material-ui/core';
 import { connect } from 'react-redux';
 import * as actions from '../actions/AContact';
 import ContactForm from '../pages/ContactForm'
@@ -32,7 +32,18 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: '#fffbf2',
             cursor: 'pointer'
         },
+    },    
+    search: {
+        width: '70%', 
+        margin:'10px'
+    },    
+    addButton: {
+        margin: '20px'
     },
+    pagination: {
+        margin:'20px 400px'
+    }
+    
 }))
 
 const Contacts = (props) => {
@@ -45,12 +56,13 @@ const Contacts = (props) => {
 
     const pages = [5, 10, 25];
     const [page, setPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(pages[0])
+    const [rowsPerPage, setRowsPerPage] = useState(pages[0]);
+    const [order, setOrder] = useState('asc');
+    const [orderBy, setOrderBy] = useState('FullName');
+    const [filter, setFilter] = useState('');
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
-        props.fetchAllContacts(newPage, rowsPerPage)
-        console.log(props.pagination)
     }
 
     const handleChangeRowsPerPage = event => {
@@ -61,9 +73,9 @@ const Contacts = (props) => {
     }
 
     useEffect(() => {
-        props.fetchAllContacts(page, rowsPerPage);
+        props.fetchAllContacts(page, rowsPerPage, order, orderBy, filter);
         console.log(props.pagination)
-    },[])
+    },[page, orderBy, order, filter])
 
     const addOrUpdateContact = (contact, resetForm) => {
 
@@ -105,12 +117,29 @@ const Contacts = (props) => {
         })
     }
 
+    const handleSort = orderRequest => {
+        const isAsc = orderBy === orderRequest && order === "asc";
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(orderRequest);
+    }
+
+    const handleSearch = e => {
+        setFilter(e.target.value)
+    }
+
    
 
         return (
             <>
             <Paper className={classes.pageContent}>
+                <TextField
+                variant="outlined"
+                label="Search Contacts"
+                name="search"
+                onChange={handleSearch}
+                className={classes.search}/>
                 <Button 
+                className={classes.addButton}
                 text="Add New Contact"
                 color="primary"
                 variant="outlined"
@@ -120,11 +149,38 @@ const Contacts = (props) => {
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <TableCell>Full Name</TableCell>
-                                <TableCell>City</TableCell>
-                                <TableCell>Street</TableCell>
-                                <TableCell>House Number</TableCell>
-                                <TableCell>Date of Birth</TableCell>
+                                <TableCell>
+                                    <TableSortLabel 
+                                     active={orderBy === 'FullName'}
+                                     direction={orderBy === 'FullName' ? order : 'asc'}
+                                     onClick={() => { handleSort('FullName')}}>
+                                        Full Name
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell>
+                                    <TableSortLabel
+                                     active={orderBy === 'City'}
+                                     direction={orderBy === 'City' ? order : 'asc'}
+                                     onClick={() => { handleSort('City')}}>
+                                        City
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell>
+                                    <TableSortLabel
+                                     active={orderBy === 'Street'}
+                                     direction={orderBy === 'Street' ? order : 'asc'}
+                                     onClick={() => { handleSort('Street')}}>
+                                        Street
+                                    </TableSortLabel>
+                                </TableCell>
+                                <TableCell>
+                                    House Number
+                                </TableCell>
+                                <TableCell>
+                                    <TableSortLabel>
+                                        Date of Birth
+                                    </TableSortLabel>
+                                </TableCell>
                                 <TableCell>Actions</TableCell>
                             </TableRow>
                         </TableHead>
@@ -132,11 +188,21 @@ const Contacts = (props) => {
                             {props.contactList !== 'undefined' ?
                             props.contactList.map(contact => 
                                 (<TableRow key={contact.id}>
-                                    <TableCell>{contact.fullName}</TableCell>
-                                    <TableCell>{contact.address.city}</TableCell>
-                                    <TableCell>{contact.address.street}</TableCell>
-                                    <TableCell>{contact.address.houseNumber}</TableCell>
-                                    <TableCell>{contact.dateOfBirth}</TableCell>
+                                    <TableCell>
+                                            {contact.fullName}
+                                    </TableCell>
+                                    <TableCell>
+                                            {contact.address.city}
+                                    </TableCell>
+                                    <TableCell>
+                                            {contact.address.street}
+                                    </TableCell>
+                                    <TableCell>
+                                            {contact.address.houseNumber}
+                                    </TableCell>
+                                    <TableCell>
+                                            {contact.dateOfBirth}
+                                    </TableCell>
                                     <TableCell>
                                         <ButtonGroup>
                                             <IconButton>
@@ -168,6 +234,8 @@ const Contacts = (props) => {
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                     /> */}
                 <Pagination 
+                 className={classes.pagination}
+                 defaultPage={1}
                  count={props.pagination.TotalPages}
                  onChange={handleChangePage}/>    
             </Paper>
