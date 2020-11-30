@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DoCheck, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import { ContactsService } from '../shared/contacts.service';
 import { Contact } from '../shared/contact.model'
 import { Observable, Subscription } from 'rxjs';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-contacts',
@@ -10,7 +11,8 @@ import { Observable, Subscription } from 'rxjs';
 })
 export class ContactsComponent implements OnInit {
 
-  public contacts: Contact[];
+  public dataSource = new MatTableDataSource<Contact>([]);
+
   displayedColumns: string[] = ['fullName', 'address.city', 'address.street', 
                                   'address.houseNumber', 'dateOfBirth'];
 
@@ -19,9 +21,11 @@ export class ContactsComponent implements OnInit {
   ngOnInit() {
     this.contactsService.getContacts()
     .subscribe(res => {
-      this.contacts = res;
+      this.dataSource.data = res;
     }, error => console.log(error),
-    () => console.log(this.contacts));
+    () => console.log(this.dataSource.data));
     ;
   }
+
+  
 }
