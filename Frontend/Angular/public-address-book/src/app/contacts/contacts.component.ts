@@ -11,20 +11,22 @@ import { MatTableDataSource } from '@angular/material/table';
 })
 export class ContactsComponent implements OnInit {
 
-  public dataSource = new MatTableDataSource<Contact>([]);
+  public dataSource: Contact [];
 
   displayedColumns: string[] = ['fullName', 'address.city', 'address.street', 
-                                  'address.houseNumber', 'dateOfBirth'];
+                                  'address.houseNumber', 'dateOfBirth', 'actions'];
 
-  constructor(private contactsService: ContactsService) { }
+  constructor(private contactsService: ContactsService) { 
+    
+  }
 
   ngOnInit() {
-    this.contactsService.getContacts()
-    .subscribe(res => {
-      this.dataSource.data = res;
-    }, error => console.log(error),
-    () => console.log(this.dataSource.data));
-    ;
+    this.contactsService.getContacts();
+    // setTimeout( () => {this.dataSource = this.contactsService.contactsList}, 5000);
+  }
+
+  onDelete(id: number) {
+    this.contactsService.deleteContact(id);
   }
 
   

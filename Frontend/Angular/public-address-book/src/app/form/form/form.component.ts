@@ -34,9 +34,8 @@ export class FormComponent implements OnInit {
   }
 
   addContact(form: FormGroup) {
-    this.service.createContact(form.value).subscribe(res => {
-      console.log(form.value);
-    })
-  }
+    this.service.createContact(form.value)
+    }
+  
 
 }
