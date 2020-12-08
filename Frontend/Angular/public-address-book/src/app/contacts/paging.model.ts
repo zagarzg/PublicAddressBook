@@ -6,3 +6,4 @@ export class Paging {
     HasNext?: boolean;
     HasPrevious?: boolean
 }
+

@@ -20,15 +20,16 @@ export class ContactsService {
   constructor(private _http: HttpClient) { }
 
   // tap, take, map, combineLatest, switchMap, concatMap, fork, distinctUntilChanged, delay, Subject, BehaviourSubject, ReplaySubject, 
-  getContacts(pageNumber: number = 1, pageSize: number = 5, searchString?: string) {
+  getContacts(pageNumber: number = 1, pageSize: number = 5, searchString?: string, orderBy?: string, sortDirection?: 'asc' | 'desc') {
 
     let params = new HttpParams();
     params = params.append('pageNumber', pageNumber.toString());
     params = params.append('pageSize', pageSize.toString());
 
-    if(searchString) {
-      params = params.append('searchString', searchString)
-    }
+    if(orderBy) params = params.append('orderBy', orderBy?.toString());
+    if(sortDirection) params = params.append('sortDirection', sortDirection?.toString());
+    if(searchString) params = params.append('searchString', searchString)
+
     return this._http.get<Contact []>(`${this.url}/GetAll`, { observe: 'response', params })
   }
 

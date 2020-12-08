@@ -12,6 +12,7 @@ import { FormComponent } from './form/form/form.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     ReactiveFormsModule,
     FormsModule,
     MatButtonModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSortModule 
   ],
   providers: [ContactsService],
   bootstrap: [AppComponent]

@@ -2,7 +2,6 @@
 using FluentValidation.Results;
 using LinqKit;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Primitives;
 using PublicAddressBook.BusinessLayer.Exceptions;
 using PublicAddressBook.BusinessLayer.Interfaces;
 using PublicAddressBook.BusinessLayer.Validators;
@@ -15,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -58,7 +56,7 @@ namespace PublicAddressBook.BusinessLayer.Implementations
 
             var mappedContacts = _mapper.Map<IEnumerable<ContactDTO>>(contacts);
 
-            
+
 
             return PagedList<ContactDTO>.ToPagedList(mappedContacts, contactParameters.PageNumber, contactParameters.PageSize);
         }
@@ -93,8 +91,8 @@ namespace PublicAddressBook.BusinessLayer.Implementations
 
         public async Task<Contact> Create(ContactDTO contact, CancellationToken cancellationToken)
         {
-            ValidationResult result =_validator.Validate(contact);
-            
+            ValidationResult result = _validator.Validate(contact);
+
             if (!result.IsValid)
             {
                 ValidationException exception = new ValidationException(nameof(contact));
@@ -120,9 +118,9 @@ namespace PublicAddressBook.BusinessLayer.Implementations
 
         public async Task Delete(Guid id, CancellationToken cancellationToken)
         {
-            try 
+            try
             {
-                   await _repository.Delete(id, cancellationToken);
+                await _repository.Delete(id, cancellationToken);
             }
             catch (Exception e)
             {
@@ -145,8 +143,11 @@ namespace PublicAddressBook.BusinessLayer.Implementations
             return predicate;
         }
 
-        internal Func<IQueryable<Contact>, IOrderedQueryable<Contact>> GetSort(string orderBy, SortDirection sortDirection)
+        internal Func<IQueryable<Contact>, IQueryable<Contact>> GetSort(string orderBy, SortDirection? sortDirection)
         {
+            if (sortDirection == null)
+                return null;
+
             if (string.IsNullOrWhiteSpace(orderBy))
                 return null;
 
@@ -154,7 +155,7 @@ namespace PublicAddressBook.BusinessLayer.Implementations
             {
                 switch (orderBy)
                 {
-                    case nameof(Contact.FullName):
+                    case "fullName":
                         if (sortDirection == SortDirection.asc)
                         {
                             contacts = contacts.OrderBy(x => x.FullName);
@@ -165,7 +166,7 @@ namespace PublicAddressBook.BusinessLayer.Implementations
                         }
                         break;
 
-                    case nameof(Contact.Address.City):
+                    case "city":
                         if (sortDirection == SortDirection.asc)
                         {
                             contacts = contacts.OrderBy(x => x.Address.City);
@@ -176,7 +177,7 @@ namespace PublicAddressBook.BusinessLayer.Implementations
                         }
                         break;
 
-                    case nameof(Contact.Address.Street):
+                    case "street":
                         if (sortDirection == SortDirection.asc)
                         {
                             contacts = contacts.OrderBy(x => x.Address.Street);
@@ -186,12 +187,9 @@ namespace PublicAddressBook.BusinessLayer.Implementations
                             contacts = contacts.OrderByDescending(x => x.Address.Street);
                         }
                         break;
-
-                    default:
-                        break;
-
                 }
-                return (IOrderedQueryable<Contact>)contacts;
+
+                return contacts;
             };
         }
     }
