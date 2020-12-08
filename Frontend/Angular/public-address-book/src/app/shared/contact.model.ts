@@ -1,5 +1,7 @@
+import { SystemJsNgModuleLoader } from '@angular/core';
+
 export interface Contact {
-    id: number;
+    id: string;
     fullName: string;
     address: any;
     dateOfBirth: Date;

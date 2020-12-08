@@ -10,7 +10,7 @@ namespace PublicAddressBook.DomainLayer.Helpers
 
         public int PageNumber { get; set; } = 1;
 
-        private int _pageSize = 5;
+        private int _pageSize = 20;
 
         public int PageSize
         {

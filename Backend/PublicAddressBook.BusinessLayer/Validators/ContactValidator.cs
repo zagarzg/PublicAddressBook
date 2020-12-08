@@ -20,9 +20,9 @@ namespace PublicAddressBook.BusinessLayer.Validators
             RuleFor(x => x.Address.Street).Cascade(CascadeMode.StopOnFirstFailure).NotEmpty().WithMessage("Street is required");
             RuleFor(x => x.Address.HouseNumber).Cascade(CascadeMode.StopOnFirstFailure).NotEmpty().WithMessage("House number is required");
 
-            RuleFor(x => x.DateOfBirth).Cascade(CascadeMode.StopOnFirstFailure).NotEmpty().WithMessage("Date of birth is required")
-                                       .Must(dateOfBirth => IsBornedInFuture(dateOfBirth)).WithMessage("Contact cannot be borned in future")
-                                       .Must(dateOfBirth => IsOlderThan130(dateOfBirth)).WithMessage("Contact cannot be older than 130 years old");
+            //RuleFor(x => x.DateOfBirth).Cascade(CascadeMode.StopOnFirstFailure).NotEmpty().WithMessage("Date of birth is required")
+            //                           .Must(dateOfBirth => IsBornedInFuture(dateOfBirth)).WithMessage("Contact cannot be borned in future")
+            //                           .Must(dateOfBirth => IsOlderThan130(dateOfBirth)).WithMessage("Contact cannot be older than 130 years old");
         }
 
         public bool AllLetters(string fullName)

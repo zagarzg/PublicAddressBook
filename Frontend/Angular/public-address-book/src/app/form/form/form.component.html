@@ -1,7 +1,7 @@
 <form class="example-form" [formGroup]="myForm" autocomplete="off" (submit)="onSubmit(myForm)">
     <mat-form-field class="example-full-width">
       <mat-label>Full Name</mat-label>
-      <input matInput placeholder="Full Name" formControlName="fullName">
+      <input matInput placeholder="Full Name" formControlName="fullName" >
     </mat-form-field>
   <div formGroupName="address">
     <mat-form-field class="example-full-width">
@@ -16,6 +16,6 @@
       <mat-label>House Number</mat-label>
       <input matInput placeholder="House Number" formControlName="houseNumber">
     </mat-form-field>
-    <button type="submit">SUBMIT</button>
+    <button type="submit">{{editMode ? 'UPDATE' : 'ADD'}}</button>
   </div>
 </form>
